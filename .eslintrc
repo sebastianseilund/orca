@@ -1,0 +1,19 @@
+parser: babel-eslint
+env:
+  node: true
+rules:
+  no-use-before-define: 0
+  quotes:
+  - 2
+  - single
+  semi:
+  - 2
+  - never
+  strict:
+  - 2
+  - never
+globals:
+  after: true
+  before: true
+  describe: true
+  it: true

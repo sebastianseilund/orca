@@ -1,0 +1,19 @@
+#!/usr/bin/env node
+
+require('babel/register')({
+	optional: [
+		'es7.asyncFunctions'
+	]
+})
+
+var w = require('../lib/watch-service')
+var connect = require('../lib/services/vagrant').connect
+
+connect()
+    .then(function() {
+        w('domain')
+    })
+    .catch(function(e) {
+        console.error(e.stack || e.message)
+        process.exit(1)
+    })
