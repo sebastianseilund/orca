@@ -2,8 +2,6 @@
 
 TODO:
 
-- Update babel
-- Version
 - Settle on a name. Or keep this one and put it in npm.
 
 Orca n.:

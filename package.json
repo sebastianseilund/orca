@@ -1,6 +1,6 @@
 {
   "name": "orca",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A command line tool to build, push and update Docker images in a Marathon cluster in development.",
   "main": "index.js",
   "scripts": {
