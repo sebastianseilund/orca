@@ -28,7 +28,6 @@ Not yet available on npm. Install it manually using `npm link`:
 ```
 git clone https://github.com/sebastianseilund/orca.git
 cd orca
-npm install
 npm link
 ```
 

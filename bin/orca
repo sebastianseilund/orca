@@ -1,5 +1,8 @@
 #!/usr/bin/env node
-var start = require('../lib/start')
+
+require("babel-polyfill")
+
+var start = require('../lib/start').default
 
 start()
 
