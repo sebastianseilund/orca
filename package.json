@@ -11,6 +11,10 @@
   "bin": {
     "orca": "./bin/orca"
   },
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/sebastianseilund/orca.git"
+  },
   "dependencies": {
     "babel": "^5.8.29",
     "chalk": "^1.0.0",
