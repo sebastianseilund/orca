@@ -1,15 +1,15 @@
 {
   "name": "orca",
   "version": "0.0.0",
-  "description": "A prototype for nice restarting of services running in Marathon",
+  "description": "A command line tool to build, push and update Docker images in a Marathon cluster in development.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified :(\" && exit 1"
   },
   "author": "Sebastian Seilund <sebsei@gmail.com>",
   "license": "MIT",
   "bin": {
-    "orca2": "./bin/orca"
+    "orca": "./bin/orca"
   },
   "dependencies": {
     "babel": "^5.8.29",
