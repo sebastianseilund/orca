@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+
+require('babel/register')({
+	optional: [
+		'es7.asyncFunctions'
+	]
+})
+
+var start = require('../lib/start')
+
+start()
+
+process.on('unhandledRejection', function(e) {
+    console.error('Unhandled rejection:')
+    console.error(e.stack || e.message)
+    process.exit(1)
+})
