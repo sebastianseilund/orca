@@ -19,7 +19,7 @@ export async function init() {
         let contents = await readFile(configFile)
         data = yaml.safeLoad(contents)
     } catch (e) {
-        throw userError(`Could not open config file (${file}): ${e.message}`)
+        throw userError(`Could not open config file (${configFile}): ${e.message}`)
     }
 
     if (!data.marathon) {
