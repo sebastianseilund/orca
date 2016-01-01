@@ -3,9 +3,10 @@ import {get as getConfig} from './config'
 
 export async function updateApp(name, tag) {
     //Load current state
+    let registry = getConfig().registry
     let current = await getApp(name)
     let container = current.app.container
-    container.docker.image = `service-router.marathon.mesos:5000/${name}:${tag}`
+    container.docker.image = `${registry}/${name}:${tag}`
 
     //Update
     await request('PUT', `/v2/apps/${name}?force=true`, {

@@ -1,5 +1,6 @@
 import Queue from 'promise-queue'
+import argv from './argv'
 
-let queue = new Queue(1, Math.Infinity)
+let queue = new Queue(argv.c, Math.Infinity)
 
 export default queue

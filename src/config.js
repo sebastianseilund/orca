@@ -1,8 +1,8 @@
 import fs from 'fs'
 import path from 'path'
 import promisify from 'es6-promisify'
-import {argv} from 'yargs'
 import yaml from 'js-yaml'
+import argv from './argv'
 import userError from './user-error'
 
 let readFile = promisify(fs.readFile)
