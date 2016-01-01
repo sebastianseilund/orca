@@ -20,6 +20,8 @@
     "chalk": "^1.0.0",
     "es6-promisify": "^3.0.0",
     "js-yaml": "^3.4.6",
+    "promise-map-series": "^0.2.2",
+    "promise-queue": "^2.2.0",
     "request-promise": "^1.0.2",
     "sane": "^1.0.3",
     "yargs": "^3.29.0"

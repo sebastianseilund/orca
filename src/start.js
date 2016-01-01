@@ -1,4 +1,5 @@
 import chalk from 'chalk'
+import promiseMapSeries from 'promise-map-series'
 import {init as initConfig, get as getConfig} from './config'
 import Watcher from './watcher'
 
@@ -15,7 +16,8 @@ export default async function() {
         process.exit(1)
     }
 
-    getConfig().apps.forEach(app => {
-        new Watcher(app)
+    await promiseMapSeries(getConfig().apps, app => {
+        let watcher = new Watcher(app)
+        return watcher.watch()
     })
 }

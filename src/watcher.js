@@ -3,6 +3,7 @@ import sane from 'sane'
 import path from 'path'
 import chalk from 'chalk'
 import hostExec from './host-exec'
+import queue from './queue'
 import {updateApp} from './marathon'
 import {get as getConfig} from './config'
 
@@ -12,42 +13,51 @@ export default class Watcher {
     constructor(opts) {
     	this.name = opts.name
         this.dir = opts.dir
+        this.glob = opts.glob
 
     	longestName = Math.max(longestName, this.name.length)
 
     	this.restarting = false
     	this.again = false
+    }
 
-    	this.watcher = sane(this.dir, {
-    			glob: opts.glob,
-    			watchman: true
-    		})
-    		.on('ready', () => {
-    			this.log('Ready')
-                this.restart()
-    		})
-    		.on('change', this.changed.bind(this, 'Changed'))
-    		.on('add', this.changed.bind(this, 'Added'))
-    		.on('delete', this.changed.bind(this, 'Deleted'))
+    watch() {
+        return new Promise(resolve => {
+            this.watcher = sane(this.dir, {
+        			glob: this.glob,
+        			watchman: true
+        		})
+        		.on('ready', () => {
+        			this.log('Ready')
+                    this.enqueueRestart()
+                    resolve()
+        		})
+        		.on('change', this.changed.bind(this, 'Changed'))
+        		.on('add', this.changed.bind(this, 'Added'))
+        		.on('delete', this.changed.bind(this, 'Deleted'))
+        })
     }
 
     changed(type, filepath) {
     	this.log(type + ' ' + filepath)
-    	this.scheduleRestart(500)
+    	this.scheduleEnqueue(500)
     }
 
-    scheduleRestart(delay) {
-    	clearTimeout(this.restartTimer)
-    	this.restartTimer = setTimeout(this.restart.bind(this), delay)
+    scheduleEnqueue(delay) {
+    	clearTimeout(this.enqueueTimer)
+    	this.enqueueTimer = setTimeout(this.enqueueRestart.bind(this), delay)
     }
 
-    async restart() {
-    	if (this.restarting) {
+    enqueueRestart() {
+        if (this.restarting) {
     		this.again = true
     		return
     	}
     	this.restarting = true
+        queue.add(this.restart.bind(this))
+    }
 
+    async restart() {
         try {
             let tag = 'orca.' + Date.now() //We append a timestamp since we want to make sure Marathon pulls the new image
             let imageName = getConfig().registry + `/${this.name}:${tag}`
@@ -73,7 +83,7 @@ export default class Watcher {
         this.restarting = false
     	if (this.again) {
     		this.again = false
-    		await this.restart()
+    		await this.enqueueRestart()
     	}
     }
 

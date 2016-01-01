@@ -14,7 +14,6 @@ let configDir = path.dirname(configFile)
 let data
 
 export async function init() {
-
     try {
         let contents = await readFile(configFile)
         data = yaml.safeLoad(contents)
