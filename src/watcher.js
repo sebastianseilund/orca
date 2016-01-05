@@ -7,15 +7,11 @@ import queue from './queue'
 import {updateApp} from './marathon'
 import {get as getConfig} from './config'
 
-var longestName = 0
-
 export default class Watcher {
     constructor(opts) {
     	this.name = opts.name
         this.dir = opts.dir
         this.glob = opts.glob
-
-    	longestName = Math.max(longestName, this.name.length)
 
     	this.restarting = false
     	this.again = false
@@ -88,6 +84,9 @@ export default class Watcher {
     }
 
     log(msg) {
+        let longestName = getConfig().apps.reduce((memo, app) => {
+            return Math.max(memo, app.name.length)
+        }, 0)
     	console.log(chalk.grey(_.padLeft('[' + this.name + ']', longestName + 2)) + ' ' + msg)
     }
 }
