@@ -8,10 +8,8 @@ import {updateApp} from './marathon'
 import {get as getConfig} from './config'
 
 export default class Watcher {
-    constructor(opts) {
-    	this.name = opts.name
-        this.dir = opts.dir
-        this.glob = opts.glob
+    constructor(app) {
+        this.app = app
 
     	this.restarting = false
     	this.again = false
@@ -19,8 +17,8 @@ export default class Watcher {
 
     watch() {
         return new Promise(resolve => {
-            this.watcher = sane(this.dir, {
-        			glob: this.glob,
+            this.watcher = sane(this.app.dir, {
+        			glob: this.app.glob,
         			watchman: true
         		})
         		.on('ready', () => {
@@ -55,14 +53,14 @@ export default class Watcher {
 
     async restart() {
         try {
-            let tag = 'orca.' + Date.now() //We append a timestamp since we want to make sure Marathon pulls the new image
-            let imageName = getConfig().registry + `/${this.name}:${tag}`
-            this.log('Building image...')
-            await hostExec('docker', ['build', '-t', imageName, '.'], {cwd: this.dir})
-            this.log('Pushing image...')
-            await hostExec('docker', ['push', imageName], {cwd: this.dir})
-            this.log('Updating Marathon...')
-            await updateApp(this.name, tag)
+            let tag = this.app.tag || getConfig().tag || 'orca.' + Date.now() //We append a timestamp since we want to make sure Marathon pulls the new image
+            let imageName = getConfig().registry + `/${this.app.name}:${tag}`
+            this.log(`Building image ${imageName}`)
+            await hostExec('docker', ['build', '-t', imageName, '.'], {cwd: this.app.dir})
+            this.log('Pushing image')
+            await hostExec('docker', ['push', imageName], {cwd: this.app.dir})
+            this.log('Updating Marathon')
+            await updateApp(this.app.name, tag)
             this.log(chalk.green('Restarted'))
         } catch (e) {
             if (e.code == 'EXEC_ERROR') {
@@ -87,6 +85,6 @@ export default class Watcher {
         let longestName = getConfig().apps.reduce((memo, app) => {
             return Math.max(memo, app.name.length)
         }, 0)
-    	console.log(chalk.grey(_.padLeft('[' + this.name + ']', longestName + 2)) + ' ' + msg)
+    	console.log(chalk.grey(_.padLeft('[' + this.app.name + ']', longestName + 2)) + ' ' + msg)
     }
 }
