@@ -23,7 +23,9 @@ export default class Watcher {
         		})
         		.on('ready', () => {
         			this.log('Ready')
-                    this.enqueueRestart()
+                    if (getConfig().instant) {
+                        this.enqueueRestart()
+                    }
                     resolve()
         		})
         		.on('change', this.changed.bind(this, 'Changed'))
