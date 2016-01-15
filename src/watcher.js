@@ -87,6 +87,6 @@ export default class Watcher {
         let longestName = getConfig().apps.reduce((memo, app) => {
             return Math.max(memo, app.name.length)
         }, 0)
-    	console.log(chalk.grey(_.padLeft('[' + this.app.name + ']', longestName + 2)) + ' ' + msg)
+    	console.log(chalk.grey(_.padStart('[' + this.app.name + ']', longestName + 2)) + ' ' + msg)
     }
 }
