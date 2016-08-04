@@ -29,6 +29,8 @@ cd orca
 npm link
 ```
 
+To watch files we use the [sane](https://www.npmjs.com/package/sane) module, which will use [Watchman](https://facebook.github.io/watchman/) (the Facebook one, _not_ the npm one) if available. Watchman can be installed with Homebrew on macOS: `brew update && brew install watchman`.
+
 
 ## Environment requirements
 
