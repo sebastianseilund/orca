@@ -8,8 +8,9 @@ import {updateApp} from './marathon'
 import {get as getConfig} from './config'
 
 export default class Watcher {
-    constructor(app) {
+    constructor(app, env) {
         this.app = app
+        this.env = env
 
     	this.restarting = false
     	this.again = false
@@ -58,7 +59,12 @@ export default class Watcher {
             let tag = this.app.tag || getConfig().tag || 'orca.' + Date.now() //We append a timestamp since we want to make sure Marathon pulls the new image
             let imageName = getConfig().registry + `/${this.app.name}:${tag}`
             this.log(`Building image ${imageName}`)
-            await hostExec('docker', ['build', '-t', imageName, '.'], {cwd: this.app.dir})
+            let params = ['build', '-t', imageName, '.']
+            _.map(this.env, (value, key) => {
+                params.push('--build-arg')
+                params.push(`${key}="${value}"`)
+            })
+            await hostExec('docker', params, {cwd: this.app.dir})
             this.log('Pushing image')
             await hostExec('docker', ['push', imageName], {cwd: this.app.dir})
             this.log('Updating Marathon')

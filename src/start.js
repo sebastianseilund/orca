@@ -16,8 +16,9 @@ export default async function() {
         process.exit(1)
     }
 
-    await promiseMapSeries(getConfig().apps, app => {
-        let watcher = new Watcher(app)
+    let config = getConfig()
+    await promiseMapSeries(config.apps, app => {
+        let watcher = new Watcher(app, config.env)
         return watcher.watch()
     })
 }
