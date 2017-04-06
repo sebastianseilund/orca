@@ -8,9 +8,9 @@ import {updateApp} from './marathon'
 import {get as getConfig} from './config'
 
 export default class Watcher {
-    constructor(app, env) {
+    constructor(app, buildArgs) {
         this.app = app
-        this.env = env
+        this.buildArgs = buildArgs
 
     	this.restarting = false
     	this.again = false
@@ -60,7 +60,7 @@ export default class Watcher {
             let imageName = getConfig().registry + `/${this.app.name}:${tag}`
             this.log(`Building image ${imageName}`)
             let params = ['build', '-t', imageName, '.']
-            _.map(this.env, (value, key) => {
+            _.map(this.buildArgs, (value, key) => {
                 params.push('--build-arg')
                 params.push(`${key}="${value}"`)
             })

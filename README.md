@@ -76,7 +76,7 @@ The config file is a YAML file with the following keys:
     - `name`: The name of the app in Marathon.
     - `dir`: Path to the directory that contains the relevant Dockerfile. This can either be an absolute path or be relative to the config file itself. Defaults to the same value of `name`.
     - `glob`: An array of glob patterns to monitor for file changes inside `dir`. Defaults to an array with a single element `**/*` (i.e. all files are monitored).
-- `env`: docker build-time variables (passed to docker build with `--build-arg` option)
+- `buildArgs`: docker build-time variables (passed to docker build with `--build-arg` option)
 
 If an element in `apps` is a string it will be regarded the same as an object with that string value in both `name` and `dir`. This means:
 
@@ -103,7 +103,7 @@ apps:
   - **/*.js
   - **/*.css
   - **/*.html
-env:
+buildArgs:
   NPM_TOKEN: 2323drff98-41c8-3c05-2342-237821hd
   DOCKER_BUILD_ARG: docker-build-arg
 ```

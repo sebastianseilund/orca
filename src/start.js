@@ -18,7 +18,7 @@ export default async function() {
 
     let config = getConfig()
     await promiseMapSeries(config.apps, app => {
-        let watcher = new Watcher(app, config.env)
+        let watcher = new Watcher(app, config.buildArgs)
         return watcher.watch()
     })
 }
