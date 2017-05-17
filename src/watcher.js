@@ -6,6 +6,7 @@ import hostExec from './host-exec'
 import queue from './queue'
 import {updateApp} from './marathon'
 import {get as getConfig} from './config'
+import shell from 'shell-escape-tag'
 
 export default class Watcher {
     constructor(app, buildArgs) {
@@ -62,7 +63,7 @@ export default class Watcher {
             let params = ['build', '-t', imageName, '.']
             _.map(this.buildArgs, (value, key) => {
                 params.push('--build-arg')
-                params.push(`${key}="${value}"`)
+                params.push(shell`${key}=${value}`)
             })
             await hostExec('docker', params, {cwd: this.app.dir})
             this.log('Pushing image')
